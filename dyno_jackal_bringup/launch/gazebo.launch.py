@@ -26,6 +26,8 @@ def generate_launch_description():
     os.environ["IGN_GAZEBO_RESOURCE_PATH"] = gazebo_models_path
     # Front Flea3 camera on the jackal (see jackal_description accessories)
     os.environ.setdefault("JACKAL_FLEA3", "1")
+    # 15 fps instead of the Flea3 60 fps keeps the raw image stream light enough for RViz
+    os.environ.setdefault("JACKAL_FLEA3_FPS", "15")
     # Camera placed above and in front of the chassis, pitched 15 deg up, so the body is out of view
     os.environ.setdefault("JACKAL_FLEA3_OFFSET", "0.14 0 0.12")
     os.environ.setdefault("JACKAL_FLEA3_TILT", "-0.2618")

@@ -223,10 +223,11 @@
     <xacro:property name="prefix" value="$(optenv JACKAL_FLEA3_PREFIX ${mount})" />
     <xacro:property name="parent" value="$(optenv JACKAL_FLEA3_PARENT ${namespace}/${mount}_mount)" />
     <xacro:property name="hfov" value="$(optenv JACKAL_FLEA3_HFOV 1.0471975512)" />
+    <xacro:property name="fps" value="$(optenv JACKAL_FLEA3_FPS 60)" />
 
     <xacro:pointgrey_flea3 frame="${prefix}_camera" name="${name}"
       camera_x="0.0754" camera_y="0.029" camera_z="0.029"
-      camera_mass="0.085" hfov="${hfov}" fps="60" width="640" height="512"/>
+      camera_mass="0.085" hfov="${hfov}" fps="${fps}" width="640" height="512"/>
 
     <!-- Mount Enabled -->
     <xacro:if value="${tower}">
