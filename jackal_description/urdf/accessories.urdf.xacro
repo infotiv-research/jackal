@@ -212,7 +212,7 @@
 
   <!-- Common camera mounts and accessory URDFs. -->
   <xacro:include filename="$(find jackal_description)/urdf/accessories/camera_mount.urdf.xacro" />
-  <!--xacro:include filename="$(find pointgrey_camera_description)/urdf/pointgrey_flea3.urdf.xacro" /-->
+  <xacro:include filename="$(find jackal_description)/urdf/accessories/pointgrey_flea3.urdf.xacro" />
 
   <!-- If enabled, generate the flea3 camera payload with a tilt of 30 degrees. -->
   <xacro:if value="$(optenv JACKAL_FLEA3 0)">
@@ -221,11 +221,12 @@
     <xacro:property name="tower" value="$(optenv JACKAL_FLEA3_TOWER 1)" />
     <xacro:property name="mount" value="$(optenv JACKAL_FLEA3_MOUNT front)" />
     <xacro:property name="prefix" value="$(optenv JACKAL_FLEA3_PREFIX ${mount})" />
-    <xacro:property name="parent" value="$(optenv JACKAL_FLEA3_PARENT ${mount}_mount)" />
+    <xacro:property name="parent" value="$(optenv JACKAL_FLEA3_PARENT ${namespace}/${mount}_mount)" />
+    <xacro:property name="hfov" value="$(optenv JACKAL_FLEA3_HFOV 1.0471975512)" />
 
     <xacro:pointgrey_flea3 frame="${prefix}_camera" name="${name}"
       camera_x="0.0754" camera_y="0.029" camera_z="0.029"
-      camera_mass="0.085" hfov="1.0471975512" fps="60" width="640" height="512"/>
+      camera_mass="0.085" hfov="${hfov}" fps="60" width="640" height="512"/>
 
     <!-- Mount Enabled -->
     <xacro:if value="${tower}">

@@ -24,6 +24,13 @@ def generate_launch_description():
     os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
     os.environ["GZ_SIM_RESOURCE_PATH"] = gazebo_models_path
     os.environ["IGN_GAZEBO_RESOURCE_PATH"] = gazebo_models_path
+    # Front Flea3 camera on the jackal (see jackal_description accessories)
+    os.environ.setdefault("JACKAL_FLEA3", "1")
+    # Wide front view (90 deg horizontal) instead of the Flea3 default of 60 deg
+    os.environ.setdefault("JACKAL_FLEA3_HFOV", "1.5707963")
+    # Camera placed above and in front of the chassis, pitched 15 deg up, so the body is out of view
+    os.environ.setdefault("JACKAL_FLEA3_OFFSET", "0.14 0 0.12")
+    os.environ.setdefault("JACKAL_FLEA3_TILT", "-0.2618")
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -87,10 +94,23 @@ def generate_launch_description():
         remappings=[(f"/model/jackal/odom_ground_truth", f"odom_ground_truth")]
     )
 
+    # Bridge the front camera image and info from Gazebo to ROS2
+    jackal_camera_bridge=Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        name="jackal_camera_bridge",
+        output="screen",
+        arguments=[
+                    "/jackal/front/image_raw@sensor_msgs/msg/Image@gz.msgs.Image",
+                    "/jackal/front/image_raw/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo",
+                ],
+    )
+
     ld = LaunchDescription()
     ld.add_action(robot_state_publisher)
     ld.add_action(spawn_robot)
     ld.add_action(ros_gz_bridge)
+    ld.add_action(jackal_camera_bridge)
 
     return ld
 

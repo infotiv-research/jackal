@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--
+    Stand-in for the Pointgrey Flea3 camera model. pointgrey_camera_description
+    is not available for ROS 2 Jazzy, so this macro keeps the same interface and
+    defines the camera as a box with a Gazebo camera sensor, using the Flea3
+    parameters (60 deg horizontal FOV, 640x512 at 60 fps).
+  -->
+  <xacro:macro name="pointgrey_flea3" params="frame name camera_x camera_y camera_z camera_mass hfov fps width height">
+    <link name="${frame}">
+      <inertial>
+        <mass value="${camera_mass}" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="${camera_mass * (camera_y*camera_y + camera_z*camera_z) / 12}" ixy="0.0" ixz="0.0"
+                 iyy="${camera_mass * (camera_x*camera_x + camera_z*camera_z) / 12}" iyz="0.0"
+                 izz="${camera_mass * (camera_x*camera_x + camera_y*camera_y) / 12}" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${camera_x} ${camera_y} ${camera_z}" />
+        </geometry>
+        <material name="dark_grey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${camera_x} ${camera_y} ${camera_z}" />
+        </geometry>
+      </collision>
+    </link>
+
+    <gazebo reference="${frame}">
+      <sensor name="${name}" type="camera">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <update_rate>${fps}</update_rate>
+        <topic>/jackal/${name}/image_raw</topic>
+        <camera>
+          <horizontal_fov>${hfov}</horizontal_fov>
+          <image>
+            <width>${width}</width>
+            <height>${height}</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.05</near>
+            <far>100</far>
+          </clip>
+        </camera>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
